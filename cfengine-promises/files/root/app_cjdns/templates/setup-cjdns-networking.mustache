@@ -12,6 +12,10 @@ internethosts="91.219.237.212 8.8.8.8"
 orggatewayfile="/tmp/cjdns_org_gw"
 
 network_profile="$(cat /etc/enigmabox/network-profile)"
+if [[ "$network_profile" = "ebin" ]]; then             
+    clearnet_interface="wan"                          
+    internal_interfaces="lan0 lan1"                    
+fi                                                     
 if [[ "$network_profile" = "alix" ]]; then
     clearnet_interface="eth0"
     internal_interfaces="eth1 eth2"

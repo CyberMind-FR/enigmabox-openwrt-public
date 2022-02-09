@@ -5,6 +5,7 @@ ip6tables="/usr/sbin/ip6tables"
 network_profile="$(cat /etc/enigmabox/network-profile)"
 
 # define interfaces
+[[ "$network_profile" == "ebin" ]] && internal_interfaces="lan0 lan1"
 [[ "$network_profile" == "alix" ]] && internal_interfaces="eth1 eth2"
 [[ "$network_profile" == "apu" ]] && internal_interfaces="eth0 eth1"
 [[ "$network_profile" == "raspi" ]] && internal_interfaces="eth0"
@@ -79,8 +80,8 @@ $iptables -A peering-servers --dst {{ip}} -j ACCEPT
 echo 1 > /proc/sys/net/ipv4/tcp_syncookies
 
 # allow related and established
-$iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-$iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+$iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+$iptables -A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 ################################################################################
 # input
@@ -116,7 +117,7 @@ for interface in $internal_interfaces; do
 
     # allow forwarding for internal_interfaces, but not for others
     $iptables -A FORWARD -i "$interface" -o tun0 -j ACCEPT
-    $iptables -A FORWARD -i tun0 -o "$interface" -m state --state RELATED,ESTABLISHED -j ACCEPT
+    $iptables -A FORWARD -i tun0 -o "$interface" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 done
 
@@ -210,8 +211,8 @@ $ip6tables -A friends-in -i tun0 --src {{ipv6}} -j friends-services
 ################################################################################
 
 # allow related and established
-$ip6tables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-$ip6tables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+$ip6tables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+$ip6tables -A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 # allow ping
 $ip6tables -A INPUT -p ipv6-icmp -m limit --limit 10/second -j internal-in
@@ -284,7 +285,7 @@ for interface in $internal_interfaces; do
 
     # allow hype access
     $ip6tables -A FORWARD -i "$interface" -o tun0 -j ACCEPT
-    $ip6tables -A FORWARD -i tun0 -o "$interface" -m state --state RELATED,ESTABLISHED -j ACCEPT
+    $ip6tables -A FORWARD -i tun0 -o "$interface" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 done
 

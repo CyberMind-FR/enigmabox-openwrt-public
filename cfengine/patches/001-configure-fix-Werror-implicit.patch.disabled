@@ -1,0 +1,24 @@
+--- a/m4/cf3_gcc_flags.m4	2021-05-20 12:00:02.081259275 +0200
++++ b/m4/cf3_gcc_flags.m4	2021-05-20 12:00:32.469356788 +0200
+@@ -49,13 +49,13 @@
+      [AC_MSG_RESULT(no)
+      CFLAGS="$save_CFLAGS"])
+ 
+-    save_CFLAGS="$CFLAGS"
+-    CFLAGS="$CFLAGS -Werror=implicit-function-declaration"
+-    AC_MSG_CHECKING(for -Werror=implicit-function-declaration)
+-    AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() {}])],
+-     [AC_MSG_RESULT(yes)],
+-     [AC_MSG_RESULT(no)
+-     CFLAGS="$save_CFLAGS"])
++#    save_CFLAGS="$CFLAGS"
++#    CFLAGS="$CFLAGS -Werror=implicit-function-declaration"
++#    AC_MSG_CHECKING(for -Werror=implicit-function-declaration)
++#    AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() {}])],
++#     [AC_MSG_RESULT(yes)],
++#     [AC_MSG_RESULT(no)
++#     CFLAGS="$save_CFLAGS"])
+ 
+     save_CFLAGS="$CFLAGS"
+     CFLAGS="$CFLAGS -Wunused-parameter"
+

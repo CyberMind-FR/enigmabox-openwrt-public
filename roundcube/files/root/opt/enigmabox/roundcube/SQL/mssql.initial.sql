@@ -1,15 +1,13 @@
 CREATE TABLE [dbo].[cache] (
 	[user_id] [int] NOT NULL ,
-	[cache_key] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
-	[created] [datetime] NOT NULL ,
+	[cache_key] [varchar] (128) COLLATE Latin1_General_CS_AS NOT NULL ,
 	[expires] [datetime] NULL ,
 	[data] [text] COLLATE Latin1_General_CI_AI NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 CREATE TABLE [dbo].[cache_shared] (
-	[cache_key] [varchar] (255) COLLATE Latin1_General_CI_AI NOT NULL ,
-	[created] [datetime] NOT NULL ,
+	[cache_key] [varchar] (255) COLLATE Latin1_General_CS_AS NOT NULL ,
 	[expires] [datetime] NULL ,
 	[data] [text] COLLATE Latin1_General_CI_AI NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
@@ -17,7 +15,7 @@ GO
 
 CREATE TABLE [dbo].[cache_index] (
 	[user_id] [int] NOT NULL ,
-	[mailbox] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
+	[mailbox] [varchar] (128) COLLATE Latin1_General_CS_AS NOT NULL ,
 	[expires] [datetime] NULL ,
 	[valid] [char] (1) COLLATE Latin1_General_CI_AI NOT NULL ,
 	[data] [text] COLLATE Latin1_General_CI_AI NOT NULL 
@@ -26,7 +24,7 @@ GO
 
 CREATE TABLE [dbo].[cache_thread] (
 	[user_id] [int] NOT NULL ,
-	[mailbox] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
+	[mailbox] [varchar] (128) COLLATE Latin1_General_CS_AS NOT NULL ,
 	[expires] [datetime] NULL ,
 	[data] [text] COLLATE Latin1_General_CI_AI NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
@@ -34,7 +32,7 @@ GO
 
 CREATE TABLE [dbo].[cache_messages] (
 	[user_id] [int] NOT NULL ,
-	[mailbox] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
+	[mailbox] [varchar] (128) COLLATE Latin1_General_CS_AS NOT NULL ,
 	[uid] [int] NOT NULL ,
 	[expires] [datetime] NULL ,
 	[data] [text] COLLATE Latin1_General_CI_AI NOT NULL ,
@@ -90,7 +88,6 @@ GO
 
 CREATE TABLE [dbo].[session] (
 	[sess_id] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
-	[created] [datetime] NOT NULL ,
 	[changed] [datetime] NULL ,
 	[ip] [varchar] (40) COLLATE Latin1_General_CI_AI NOT NULL ,
 	[vars] [text] COLLATE Latin1_General_CI_AI NOT NULL 
@@ -99,10 +96,12 @@ GO
 
 CREATE TABLE [dbo].[users] (
 	[user_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[username] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
+	[username] [varchar] (128) COLLATE Latin1_General_CS_AS NOT NULL ,
 	[mail_host] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
 	[created] [datetime] NOT NULL ,
 	[last_login] [datetime] NULL ,
+	[failed_login] [datetime] NULL ,
+	[failed_login_counter] [int] NULL ,
 	[language] [varchar] (5) COLLATE Latin1_General_CI_AI NULL ,
 	[preferences] [text] COLLATE Latin1_General_CI_AI NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
@@ -124,10 +123,34 @@ CREATE TABLE [dbo].[searches] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[filestore] (
+	[file_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[user_id] [int] NOT NULL ,
+	[context] [varchar] (32) COLLATE Latin1_General_CI_AI NOT NULL ,
+	[filename] [varchar] (128) COLLATE Latin1_General_CI_AI NOT NULL ,
+	[mtime] [int] NOT NULL ,
+	[data] [text] COLLATE Latin1_General_CI_AI NULL ,
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 CREATE TABLE [dbo].[system] (
 	[name] [varchar] (64) COLLATE Latin1_General_CI_AI NOT NULL ,
 	[value] [text] COLLATE Latin1_General_CI_AI NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[cache] WITH NOCHECK ADD 
+	 PRIMARY KEY CLUSTERED 
+	(
+		[user_id],[cache_key]
+	) ON [PRIMARY] 
+GO
+
+ALTER TABLE [dbo].[cache_shared] WITH NOCHECK ADD 
+	 PRIMARY KEY CLUSTERED 
+	(
+		[cache_key]
+	) ON [PRIMARY] 
 GO
 
 ALTER TABLE [dbo].[cache_index] WITH NOCHECK ADD 
@@ -200,6 +223,13 @@ ALTER TABLE [dbo].[searches] WITH NOCHECK ADD
 	) ON [PRIMARY] 
 GO
 
+ALTER TABLE [dbo].[filestore] WITH NOCHECK ADD 
+	CONSTRAINT [PK_filestore_file_id] PRIMARY KEY  CLUSTERED 
+	(
+		[file_id]
+	) ON [PRIMARY] 
+GO
+
 ALTER TABLE [dbo].[system] WITH NOCHECK ADD 
 	CONSTRAINT [PK_system_name] PRIMARY KEY CLUSTERED 
 	(
@@ -209,12 +239,7 @@ GO
 
 ALTER TABLE [dbo].[cache] ADD 
 	CONSTRAINT [DF_cache_user_id] DEFAULT ('0') FOR [user_id],
-	CONSTRAINT [DF_cache_cache_key] DEFAULT ('') FOR [cache_key],
-	CONSTRAINT [DF_cache_created] DEFAULT (getdate()) FOR [created]
-GO
-
-ALTER TABLE [dbo].[cache_shared] ADD 
-	CONSTRAINT [DF_cache_shared_created] DEFAULT (getdate()) FOR [created]
+	CONSTRAINT [DF_cache_cache_key] DEFAULT ('') FOR [cache_key]
 GO
 
 ALTER TABLE [dbo].[cache_index] ADD 
@@ -223,12 +248,6 @@ GO
 
 ALTER TABLE [dbo].[cache_messages] ADD 
 	CONSTRAINT [DF_cache_messages_flags] DEFAULT (0) FOR [flags]
-GO
-
-CREATE INDEX [IX_cache_user_id] ON [dbo].[cache]([user_id]) ON [PRIMARY]
-GO
-
-CREATE INDEX [IX_cache_cache_key] ON [dbo].[cache]([cache_key]) ON [PRIMARY]
 GO
 
 CREATE INDEX [IX_cache_shared_cache_key] ON [dbo].[cache_shared]([cache_key]) ON [PRIMARY]
@@ -280,7 +299,7 @@ ALTER TABLE [dbo].[contactgroups] ADD
 	CONSTRAINT [CK_contactgroups_del] CHECK ([del] = '1' or [del] = '0')
 GO
 
-CREATE INDEX [IX_contactgroups_user_id] ON [dbo].[contacts]([user_id]) ON [PRIMARY]
+CREATE INDEX [IX_contactgroups_user_id] ON [dbo].[contactgroups]([user_id]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[contactgroupmembers] ADD 
@@ -313,11 +332,13 @@ GO
 
 ALTER TABLE [dbo].[session] ADD 
 	CONSTRAINT [DF_session_sess_id] DEFAULT ('') FOR [sess_id],
-	CONSTRAINT [DF_session_created] DEFAULT (getdate()) FOR [created],
 	CONSTRAINT [DF_session_ip] DEFAULT ('') FOR [ip]
 GO
 
 CREATE INDEX [IX_session_changed] ON [dbo].[session]([changed]) ON [PRIMARY]
+GO
+
+CREATE INDEX [IX_filestore_user_id] ON [dbo].[filestore]([user_id]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[users] ADD 
@@ -338,6 +359,9 @@ ALTER TABLE [dbo].[searches] ADD
 GO
 
 CREATE UNIQUE INDEX [IX_searches_user_type_name] ON [dbo].[searches]([user_id],[type],[name]) ON [PRIMARY]
+GO
+
+CREATE UNIQUE INDEX [IX_filestore_user_id_context_filename] ON [dbo].[filestore]([user_id],[context],[filename]) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[identities] ADD CONSTRAINT [FK_identities_user_id] 
@@ -385,6 +409,11 @@ ALTER TABLE [dbo].[searches] ADD CONSTRAINT [FK_searches_user_id]
     ON DELETE CASCADE ON UPDATE CASCADE
 GO
 
+ALTER TABLE [dbo].[filestore] ADD CONSTRAINT [FK_filestore_user_id]
+    FOREIGN KEY ([user_id]) REFERENCES [dbo].[users] ([user_id])
+    ON DELETE CASCADE ON UPDATE CASCADE
+GO
+
 -- Use trigger instead of foreign key (#1487112)
 -- "Introducing FOREIGN KEY constraint ... may cause cycles or multiple cascade paths."
 CREATE TRIGGER [contact_delete_member] ON [dbo].[contacts]
@@ -393,6 +422,6 @@ CREATE TRIGGER [contact_delete_member] ON [dbo].[contacts]
     WHERE [contact_id] IN (SELECT [contact_id] FROM deleted)
 GO
 
-INSERT INTO [dbo].[system] ([name], [value]) VALUES ('roundcube-version', '2014042900')
+INSERT INTO [dbo].[system] ([name], [value]) VALUES ('roundcube-version', '2019092900')
 GO
 

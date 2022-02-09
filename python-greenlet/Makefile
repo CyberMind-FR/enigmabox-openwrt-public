@@ -8,19 +8,28 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-greenlet
-PKG_VERSION:=0.4.2
-PKG_RELEASE:=1
+PKG_VERSION:=0.4.17
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/python-greenlet/greenlet.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python
+#PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+#PKG_BUILD_DEPENDS:=python
 
+#PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-greenlet-$(PKG_VERSION)
+#PKG_INSTALL:=1
+
+#include $(INCLUDE_DIR)/package.mk
+#$(call include_mk, python-package.mk)
+
+PYTHON_PKG_SETUP_ARGS:=
+
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/python-greenlet
   SUBMENU:=Python
@@ -29,6 +38,7 @@ define Package/python-greenlet
   TITLE:=greenlet
   URL:=https://github.com/python-greenlet/greenlet
   DEPENDS:=+python
+  VARIANT:=python
 endef
 
 define Package/python-greenlet/description
@@ -55,15 +65,6 @@ define Package/python-greenlet/description
   programming.
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix="$(PKG_INSTALL_DIR)/usr")
-endef
-
-define Package/python-greenlet/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
-	$(CP) \
-	    $(PKG_INSTALL_DIR)/usr/* \
-	    $(1)/usr/
-endef
-
+$(eval $(call PyPackage,python-greenlet))
 $(eval $(call BuildPackage,python-greenlet))
+

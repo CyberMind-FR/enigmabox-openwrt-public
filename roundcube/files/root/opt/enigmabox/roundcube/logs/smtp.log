@@ -1,0 +1,166 @@
+[29-May-2021 12:53:26 +0000]: <b9269265> Connecting to box:25...
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:53:26 +0000
+[29-May-2021 12:53:26 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 250-enigma.box Hello mail.box [192.168.100.1]
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 12:53:26 +0000]: <b9269265> Send: QUIT
+[29-May-2021 12:53:26 +0000]: <b9269265> Recv: 221 enigma.box closing connection
+[29-May-2021 12:53:53 +0000]: <b9269265> Connecting to box:25...
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:53:53 +0000
+[29-May-2021 12:53:53 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 250-enigma.box Hello mail.box [192.168.100.1]
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 12:53:53 +0000]: <b9269265> Send: QUIT
+[29-May-2021 12:53:53 +0000]: <b9269265> Recv: 221 enigma.box closing connection
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Connecting to localhost:25...
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:55:28 +0000
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Send: EHLO mail.box
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250-SIZE 157286400
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250-8BITMIME
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250-PIPELINING
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250 HELP
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Send: MAIL FROM:<mail@box>
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250 OK
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Send: RCPT TO:<mail@box>
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250 Accepted
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Send: DATA
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 354 Enter message, ending with "." on a line by itself
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Send: MIME-Version: 1.0
+From: mail@box
+To: mail@box
+Subject: Test message from Roundcube
+
+This is a test to confirm that Roundcube can send email.
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Send: 
+.
+[29-May-2021 12:55:28 +0000]: <73c4ce9c> Recv: 250 OK id=1lmyUy-0005Gi-AE
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Connecting to localhost:25...
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:55:30 +0000
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Send: EHLO mail.box
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 250-SIZE 157286400
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 250-8BITMIME
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 250-PIPELINING
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 250 HELP
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Send: MAIL FROM:<mail@box>
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Recv: 250 OK
+[29-May-2021 12:55:30 +0000]: <73c4ce9c> Send: RCPT TO:<mail@box>
+[29-May-2021 12:55:31 +0000]: <73c4ce9c> Recv: 250 Accepted
+[29-May-2021 12:55:31 +0000]: <73c4ce9c> Send: DATA
+[29-May-2021 12:55:31 +0000]: <73c4ce9c> Recv: 354 Enter message, ending with "." on a line by itself
+[29-May-2021 12:55:31 +0000]: <73c4ce9c> Send: MIME-Version: 1.0
+From: mail@box
+To: mail@box
+Subject: Test message from Roundcube
+
+This is a test to confirm that Roundcube can send email.
+[29-May-2021 12:55:31 +0000]: <73c4ce9c> Send: 
+.
+[29-May-2021 12:55:31 +0000]: <73c4ce9c> Recv: 250 OK id=1lmyV1-0005Gm-0p
+[29-May-2021 12:55:43 +0000]: <b9269265> Connecting to localhost:25...
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:55:43 +0000
+[29-May-2021 12:55:43 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 12:55:43 +0000]: <b9269265> Send: QUIT
+[29-May-2021 12:55:43 +0000]: <b9269265> Recv: 221 enigma.box closing connection
+[29-May-2021 12:56:15 +0000]: <b9269265> Connecting to localhost:25...
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:56:15 +0000
+[29-May-2021 12:56:15 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 12:56:15 +0000]: <b9269265> Send: QUIT
+[29-May-2021 12:56:15 +0000]: <b9269265> Recv: 221 enigma.box closing connection
+[29-May-2021 12:58:24 +0000]: <b9269265> Connecting to localhost:25...
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 12:58:24 +0000
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: MAIL FROM:<mail@box>
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250 OK
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: RCPT TO:<mail@enigma.box>
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250 Accepted
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: DATA
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 354 Enter message, ending with "." on a line by itself
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: MIME-Version: 1.0
+Date: Sat, 29 May 2021 14:58:24 +0200
+From: mail@box
+To: mail@enigma.box
+Subject: ping
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <f8d51c5189d75750ff7a5c65d53e9a84@mail.box>
+X-Sender: mail@box
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+
+test
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: 
+.
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 250 OK id=1lmyXo-0005Kj-Pc
+[29-May-2021 12:58:24 +0000]: <b9269265> Send: QUIT
+[29-May-2021 12:58:24 +0000]: <b9269265> Recv: 221 enigma.box closing connection
+[29-May-2021 13:01:11 +0000]: <b9269265> Connecting to localhost:25...
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 13:01:11 +0000
+[29-May-2021 13:01:11 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 13:01:11 +0000]: <b9269265> Send: MAIL FROM:<mail@box>
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250 OK
+[29-May-2021 13:01:11 +0000]: <b9269265> Send: RCPT TO:<mail@enigmabox.net>
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 451 Temporary local problem - please try later
+[29-May-2021 13:01:11 +0000]: <b9269265> Send: RSET
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 250 Reset OK
+[29-May-2021 13:01:11 +0000]: <b9269265> Send: QUIT
+[29-May-2021 13:01:11 +0000]: <b9269265> Recv: 221 enigma.box closing connection
+[29-May-2021 13:01:24 +0000]: <b9269265> Connecting to localhost:25...
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 220 Enigmabox ESMTP Stealth Mailer Sat, 29 May 2021 13:01:24 +0000
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: EHLO mail.box
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250-enigma.box Hello ip6-localhost [::1]
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250-SIZE 157286400
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250-8BITMIME
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250-PIPELINING
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250 HELP
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: MAIL FROM:<mail@box>
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250 OK
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: RCPT TO:<mail@enigma.box>
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250 Accepted
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: DATA
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 354 Enter message, ending with "." on a line by itself
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: MIME-Version: 1.0
+Date: Sat, 29 May 2021 15:01:23 +0200
+From: mail@box
+To: mail@enigma.box
+Subject: here we are !
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <e75a053101eda3e7a53b3e34f72acec7@mail.box>
+X-Sender: mail@box
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+
+exim (for smtp) dovecot (imap) and roundcube full working now !
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: 
+.
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 250 OK id=1lmyai-0005Q0-2T
+[29-May-2021 13:01:24 +0000]: <b9269265> Send: QUIT
+[29-May-2021 13:01:24 +0000]: <b9269265> Recv: 221 enigma.box closing connection

@@ -3,76 +3,104 @@ INTRODUCTION
 
 This file describes the basic steps to install Roundcube Webmail on your
 web server. For additional information, please also consult the project's
-wiki page at http://trac.roundcube.net/wiki
+wiki page at https://github.com/roundcube/roundcubemail/wiki
 
 
 REQUIREMENTS
 ============
 
-* The Apache, Lighttpd, Cherokee or Hiawatha web server
+* An IMAP, HTTP and SMTP server
 * .htaccess support allowing overrides for DirectoryIndex
-* PHP Version 5.2.1 or greater including
-   - PCRE, DOM, JSON, XML, Session, Sockets (required)
-   - PHP Data Objects (PDO) with driver for either MySQL, PostgreSQL or SQLite (required)
-     Note: MySQL database driver requires PHP 5.3 or newer.
-   - Libiconv, Zip (recommended)
-   - Fileinfo, Mcrypt, mbstring (optional)
-* PEAR packages distributed with Roundcube or external:
-   - Mail_Mime 1.8.1 or newer
-   - Mail_mimeDecode 1.5.5 or newer
-   - Net_SMTP (latest from https://github.com/pear/Net_SMTP/)
+* PHP Version 5.4 or greater, but not PHP8 including:
+   - PCRE, DOM, JSON, Session, Sockets, OpenSSL, Mbstring, Filter, Ctype (required)
+   - PHP PDO with driver for either MySQL, PostgreSQL, SQL Server, Oracle or SQLite (required)
+   - Iconv, Zip, Fileinfo, Intl, Exif (recommended)
+   - LDAP for LDAP addressbook support (optional)
+   - GD, Imagick (optional thumbnails generation, QR-code)
+* PEAR and PEAR packages distributed with Roundcube or external:
+   - Mail_Mime 1.10.0 or newer
+   - Net_SMTP 1.8.1 or newer
+   - Net_Socket 1.0.12 or newer
    - Net_IDNA2 0.1.1 or newer
    - Auth_SASL 1.0.6 or newer
-* php.ini options (see .htaccess file):
-   - error_reporting E_ALL & ~E_NOTICE (or lower)
-   - memory_limit > 16MB (increase as suitable to support large attachments)
-   - file_uploads enabled (for attachment upload features)
+   - Net_Sieve 1.4.3 or newer (for managesieve plugin)
+   - Crypt_GPG 1.6.3 or newer (for enigma plugin)
+   - Endroid/QrCode 1.6.0 or newer (https://github.com/endroid/QrCode)
+   - Kolab/Net_LDAP3 1.0.6 or newer (for LDAP addressbook)
+   - Masterminds/HTML5 2.5.x (optional HTML parser)
+* php.ini options:
+   - error_reporting E_ALL & ~E_NOTICE & ~E_STRICT
+   - memory_limit > 16MB
+   - file_uploads enabled (for uploading attachments and import files)
    - session.auto_start disabled
-   - zend.ze1_compatibility_mode disabled
    - suhosin.session.encrypt disabled
    - mbstring.func_overload disabled
-   - magic_quotes_runtime disabled
-   - magic_quotes_sybase disabled
-* PHP compiled with OpenSSL to connect to IMAPS and to use the spell checker
-* A MySQL (4.0.8 or newer), PostgreSQL, MS SQL Server (2005 or newer) database engine
-  or SQLite support in PHP
-* One of the above databases with permission to create tables
-* An SMTP server (recommended) or PHP configured for mail delivery
+   - pcre.backtrack_limit >= 100000
+* A MySQL, PostgreSQL, MS SQL Server (2005 or newer), Oracle database
+  or SQLite support in PHP - with permission to create tables
+* Composer installed either locally or globally (https://getcomposer.org)
 
 
 INSTALLATION
 ============
 
-1. Decompress and put this folder somewhere inside your document root
-2. Make sure that the following directories (and the files within)
+1. Decompress and put this folder somewhere inside your document root.
+  Note: Make sure files have proper owner/group for your setup. If you use
+  tar command `--no-same-owner` option might be helpful.
+2. In case you don't use the so-called "complete" release package,
+  you have to install PHP and javascript dependencies.
+  2.1. Install PHP dependencies using composer:
+    - get composer from https://getcomposer.org/download/
+    - rename the composer.json-dist file into composer.json
+    - if you want to use LDAP address books, enable the LDAP libraries in your
+      composer.json file by moving the items from "suggest" to the "require"
+      section (remove the explanation texts after the version!).
+    - run `php composer.phar install --no-dev`
+  2.2. Install Javascript dependencies by executing `bin/install-jsdeps.sh` script.
+3. Make sure that the following directories (and the files within)
    are writable by the webserver
    - /temp
    - /logs
-3. Create a new database and a database user for Roundcube (see DATABASE SETUP)
-4. Point your browser to http://url-to-roundcube/installer/
-5. Follow the instructions of the install script (or see MANUAL CONFIGURATION)
-6. After creating and testing the configuration, remove the installer directory
-7. Done!
+4. Create a new database and a database user for Roundcube (see DATABASE SETUP)
+5. Point your browser to http://url-to-roundcube/installer/
+6. Follow the instructions of the install script (or see MANUAL CONFIGURATION)
+7. After creating and testing the configuration, remove the installer directory
+   ------------------------------------------
+   IMPORTANT: REMOVE THE INSTALLER DIRECTORY!
+   ------------------------------------------
+8. If you use git sources compile css files for the Elastic skin (required
+   lessc >= 1.5.0):
+   $ cd skins/elastic
+   $ lessc -x styles/styles.less > styles/styles.css
+   $ lessc -x styles/print.less > styles/print.css
+   $ lessc -x styles/embed.less > styles/embed.css
+9. Check Known Issues section of this file
 
 
 CONFIGURATION HINTS
 ===================
 
-Roundcube writes internal errors to the 'errors' log file located in the logs
-directory which can be configured in config/main.inc.php. If you want ordinary
-PHP errors to be logged there as well, enable the 'php_value error_log' line
-in the .htaccess file and set the path to the log file accordingly.
+IMPORTANT! Read all comments in defaults.inc.php, understand them
+and configure your installation to be not surprised by default behaviour.
 
-By default the session_path settings of PHP are not modified by Roundcube.
+Roundcube writes internal errors to the 'errors.log' log file located in the logs
+directory which can be configured in config/config.inc.php. If you want ordinary
+PHP errors to be logged there as well, set error_log in php.ini or .htaccess file.
+
+Roundcube forces display_errors=Off and log_errors=On.
+
+By default the session cookie settings of PHP are not modified by Roundcube.
 However if you want to limit the session cookies to the directory where
-Roundcube resides you can uncomment and configure the according line
-in the .htaccess file.
+Roundcube resides you can set session.cookie_path in the php.ini or .htaccess file.
+
+More about PHP settings: https://github.com/roundcube/roundcubemail/wiki/Installation#php-configuration
 
 
 DATABASE SETUP
 ==============
 
 Note: Database for Roundcube must use UTF-8 character set.
+Note: See defaults.inc.php file for examples of DSN configuration.
 
 * MySQL
 -------
@@ -81,9 +109,9 @@ importing the table layout and granting the proper permissions to the
 roundcube user. Here is an example of that procedure:
 
 # mysql
-> CREATE DATABASE roundcubemail /*!40101 CHARACTER SET utf8 COLLATE utf8_general_ci */;
-> GRANT ALL PRIVILEGES ON roundcubemail.* TO roundcube@localhost
-    IDENTIFIED BY 'password';
+> CREATE DATABASE roundcubemail CHARACTER SET utf8 COLLATE utf8_general_ci;
+> CREATE USER roundcube@localhost IDENTIFIED BY 'password';
+> GRANT ALL PRIVILEGES ON roundcubemail.* TO roundcube@localhost;
 > quit
 
 # mysql roundcubemail < SQL/mysql.initial.sql
@@ -107,23 +135,18 @@ To use Roundcube with PostgreSQL support you have to follow these
 simple steps, which have to be done as the postgres system user (or
 which ever is the database superuser):
 
-$ createuser roundcube
+$ createuser -P roundcube
 $ createdb -O roundcube -E UNICODE roundcubemail
-$ psql roundcubemail
+$ psql -U roundcube -f SQL/postgres.initial.sql roundcubemail
 
-roundcubemail =# ALTER USER roundcube WITH PASSWORD 'the_new_password';
-roundcubemail =# \c - roundcube
-roundcubemail => \i SQL/postgres.initial.sql
-
-All this has been tested with PostgreSQL 8.x and 7.4.x. Older
-versions don't have a -O option for the createdb, so if you are
-using that version you'll have to change ownership of the DB later.
+Note: in some system configurations you might need to add '-U postgres' to
+createuser and createdb commands.
 
 
 * Microsoft SQL Server
 ----------------------
 Language/locale of the database must be set to us_english (1033). More info
-on this at http://trac.roundcube.net/ticket/1488918.
+on this at https://github.com/roundcube/roundcubemail/issues/4078.
 
 
 Database cleaning
@@ -133,18 +156,50 @@ bin/cleandb.sh which finally removes all records that are marked as deleted.
 Best solution is to install a cronjob running this script daily.
 
 
-
 MANUAL CONFIGURATION
 ====================
 
-First of all, rename the files config/*.inc.php.dist to config/*.inc.php.
-You can then change these files according to your environment and your needs.
-Details about the config parameters can be found in the config files.
-See http://trac.roundcube.net/wiki/Howto_Install for even more guidance.
+First of all, copy the sample configuration file config/config.inc.php.sample
+to config/config.inc.php and make the necessary adjustments according to your
+environment and your needs. More configuration options can be copied from the
+config/defaults.inc.php file into your local config.inc.php file as needed.
+Read the comments above the individual configuration options to find out what
+they do or read https://github.com/roundcube/roundcubemail/wiki/Installation
+for even more guidance.
 
-You can also modify the default .htaccess file. This is necessary to
-increase the allowed size of file attachments, for example:
-	php_value       upload_max_filesize     2M
+The maximum size of email attachments and other file uploads is controlled by
+PHP settings: upload_max_filesize and post_max_size. Read more about PHP
+settings at https://github.com/roundcube/roundcubemail/wiki/Installation#php-configuration.
+
+
+SECURE YOUR INSTALLATION
+========================
+
+Access through the webserver to the following directories should be denied:
+
+  /config
+  /temp
+  /logs
+
+Roundcube uses .htaccess files to protect these directories, so be sure to
+allow override of the Limit directives to get them taken into account. The
+package also ships a .htaccess file in the root directory which defines some
+rewrite rules. In order to properly secure your installation, please enable
+mod_rewrite for Apache webserver and double check access to the above listed
+directories and their contents is denied.
+
+NOTE: In Apache 2.4, support for .htaccess files has been disabled by
+default. Therefore you first need to enable this in your Apache main or
+virtual host config by with:
+
+  AllowOverride all
+
+For non-apache web servers add equivalent configuration parameters to deny
+direct access to these private resources.
+
+It is also recommended to change the document root to <install path>/public_html
+after installation if Roundcube runs at root of a dedicated virtual host. This
+will automatically keep sensitive files out of reach for http requests.
 
 
 UPGRADING
@@ -229,3 +284,32 @@ $HTTP["host"] == "www.example.com" {
 
     compress.filetype = ("text/plain", "text/html", "text/javascript", "text/css", "text/xml", "image/gif", "image/png")
 }
+
+
+KNOWN ISSUES
+============
+
+Installations with uw-imap server should set imap_disabled_caps = array('ESEARCH')
+in main configuration file. ESEARCH implementation in this server is broken (#1489184).
+
+PHP >= 5.6 validates the ssl certificates by default. It means that
+if IMAP/SMTP certificates are self-signed or use wrong host name you'll get
+connection errors. A solution in such cases is to set imap_conn_options,
+smtp_conn_options and managesieve_conn_options in a way described in config/defaults.inc.php.
+
+If you have problems with temp files or non-working logs make sure temp and logs folders
+are writeable to the user used by http server. Access to them may also be blocked by
+SELINUX. Here's some sample commands for SELINUX:
+
+    $ semanage fcontext -a -t httpd_sys_rw_content_t "/path_to_roundcube/logs(/.*)?"
+    $ semanage fcontext -a -t httpd_sys_rw_content_t "/path_to_roundcube/temp(/.*)?"
+    $ restorecon -Rv /path_to_roundcube/
+
+Microsoft IIS Server by default does not support WOFF fonts used in Elastic skin. It might be
+needed to add following MIME Types definitions (via web.config or IIS Manager):
+
+    .woff   application/font-woff
+    .woff2  application/font-woff2
+
+When installing on Windows be aware we're using symbolic links which may need an additional
+attention. See https://github.com/roundcube/roundcubemail/issues/7151.

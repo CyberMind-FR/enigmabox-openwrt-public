@@ -1,10 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cfengine
-PKG_VERSION:=3.6.0erc-build7
+##PKG_VERSION:=3.6.0erc-build7
+PKG_VERSION:=3.14.0-2
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+##https://github.com/cfengine/core/archive/refs/tags/3.6.0.tar.gz
+##https://codeload.github.com/cfengine/core/tar.gz/refs/tags/3.6.0
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/cfengine/core.git
 PKG_SOURCE_PROTO:=git
@@ -19,7 +22,7 @@ define Package/cfengine
   SECTION:=admin
   CATEGORY:=Administration
   TITLE:=cfengine3
-  DEPENDS:=+libpcre +libopenssl +libxml2 +tokyocabinet +libpam
+  DEPENDS:=+libpcre +libopenssl +libxml2 +tokyocabinet +libpam +libyaml +libcurl +libacl
 endef
 
 define Package/cfengine/description
@@ -31,7 +34,8 @@ define Package/cfengine/description
 endef
 
 define Build/Configure
-	cd $(PKG_BUILD_DIR) && CFLAGS="$(TARGET_CFLAGS)" ./autogen.sh --host=$(ARCH) --target=$(GNU_TARGET_NAME) --with-tokyocabinet --without-libxml2 --without-postgresql $(TARGET_CONFIGURE_OPTS)
+	export EXPLICIT_VERSION="$(PKG_VERSION)"
+	cd $(PKG_BUILD_DIR) && CFLAGS="$(TARGET_CFLAGS)" EXPLICIT_VERSION="$(PKG_VERSION)" ./autogen.sh --host=$(ARCH) --target=$(GNU_TARGET_NAME) --with-tokyocabinet --without-libxml2 --without-mysql --without-postgresql $(TARGET_CONFIGURE_OPTS)
 endef
 
 define Package/cfengine/install

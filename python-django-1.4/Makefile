@@ -1,3 +1,9 @@
+#
+# Copyright (C) 2009-2010 OpenWrt.org
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
 
 include $(TOPDIR)/rules.mk
 
@@ -6,27 +12,33 @@ PKG_VERSION:=1.4.14
 PKG_RELEASE:=1
 
 PKG_SOURCE:=Django-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/source/D/Django/
+PKG_SOURCE_URL:=https://media.djangoproject.com/releases/1.4/
 PKG_MD5SUM:=80dc1b9866487afc2ab3f774e29181bc
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/Django-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python
-
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+
+PYTHON_PKG_SETUP_ARGS:=
+
+##PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-python/Django-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-python/Django-$(PKG_VERSION)
 
 define Package/python-django-1.4
-  SECTION:=language-python
-  CATEGORY:=Languages
   SUBMENU:=Python
-  TITLE:=Django Web framework v1.4
-  URL:=https://www.djangoproject.com/
+  SECTION:=lang
+  CATEGORY:=Languages
+  TITLE:=python-django-1.4
+  URL:=https://www.djangoproject.com
   DEPENDS:=+python
+  VARIANT:=python
 endef
 
 define Package/python-django-1.4/description
- Django is a high-level Python Web framework that encourages rapid
- development and clean, pragmatic design.
+  python-django-1.4
+endef
+
+define Build/Configure
 endef
 
 define Build/Compile
@@ -42,4 +54,5 @@ define Package/python-django-1.4/install
 		$(1)$(PYTHON_PKG_DIR)/
 endef
 
+#$(eval $(call PyPackage,python-django-1.4))
 $(eval $(call BuildPackage,python-django-1.4))

@@ -1,0 +1,94 @@
+#!/bin/ash
+
+# this script is being run at boot and every 2h
+
+if [[ "$1" == "sleep" ]]; then
+    # random sleep between 000s and 999s (~15min)
+    sleeptime=$(head -30 /dev/urandom | tr -dc "0123456789" 2> /dev/null | head -c3)
+    echo "sleeping for $sleeptime seconds"
+    sleep "$sleeptime"
+fi
+
+
+
+# vars
+if [[ $(cat /etc/enigmabox/autoupdates 2> /dev/null | grep '1' | wc -l) -gt 0 ]]; then
+    do_autoupdates=1
+fi
+
+
+
+# functions
+
+check_and_run(){
+    (
+        for i in $(seq 1 200); do
+            if [[ $(ping6 -c 5 -W 5 directory | grep 'bytes from' | wc -l) -gt 0 ]]; then
+                "$@"
+                break
+            fi
+        done
+    ) &
+    sleep 5
+}
+
+check_firmware(){
+    if [[ $(/usr/sbin/asterisk -V 2>&1 | grep 'posix_fallocate64' | wc -l) -gt 0 ]]; then
+        /usr/sbin/upgrader download
+        /usr/sbin/upgrader verify
+        if [[ $(cat /tmp/fw_sig_ok) == "1" ]]; then
+            /usr/sbin/upgrader write
+        fi
+    fi
+}
+
+
+
+# bootstrap
+/opt/cfengine/bootstrap.cf
+
+# post address book
+check_and_run /usr/sbin/addressbook push
+
+if [[ "$1" != "sleep" ]]; then
+    # script called at boot time
+    check_and_run /usr/sbin/addressbook pull
+fi
+
+# server.json
+/usr/sbin/request-serverjson
+
+# cfengine apply
+/usr/sbin/cfengine-apply
+
+# send rebootsignal to phone if last reload of asterisk < 2-3h
+if [[ $(/usr/sbin/asterisk -rx 'core show uptime seconds' | tail -n 1 | cut -d' ' -f3) -lt 10000 ]]; then
+    /usr/sbin/asterisk -rx 'sip notify gsreboot 100'
+fi
+
+# updater
+if [[ "$do_autoupdates" == 1 ]]; then
+    /usr/sbin/post-update #from a previous update
+    /usr/sbin/updater check
+    /usr/sbin/updater apply
+fi
+
+# discover hypesites
+/usr/sbin/hypesites-discover
+
+# things to do overnight
+hour=$(date +%k)
+if [[ "$hour" -gt 0 && "$hour" -lt 6 ]]; then
+
+    # one time fix: check for deprecated uClibc
+    check_firmware
+
+    # set default country
+    curl http://127.0.0.1:8000/api/v1/set_default_country
+    /usr/sbin/cfengine-apply
+
+    # pull address book
+    check_and_run /usr/sbin/addressbook pull
+
+fi
+

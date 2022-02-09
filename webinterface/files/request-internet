@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+import requests
+import sys
+import json
+
+# hostid
+try:
+    resp = requests.post('http://127.0.0.1:8000/api/v1/get_option', {
+        'key': 'hostid',
+    }).text
+    data = json.loads(resp)
+    hostid = data['value']
+except:
+    print 'error in getting hostid'
+    sys.exit()
+
+# ssl
+sslcert = '/box/ssl/' + hostid + '-cert.pem'
+sslkey = '/box/ssl/' + hostid + '-private_key.pem'
+sslca = '/box/ssl/ca.pem'
+
+# req class
+class req():
+    def get(self, url):
+        return requests.get(url, cert=(sslcert, sslkey), verify=sslca, timeout=10)
+    def post(self, url, data={}):
+        return requests.post(url, data=data, cert=(sslcert, sslkey), verify=sslca, timeout=20)
+req = req()
+
+# options
+def get_option(key):
+
+    try:
+        resp = req.post('http://127.0.0.1:8000/api/v1/get_option', {
+            'key': key,
+        }).text
+        data = json.loads(resp)
+        return data['value']
+
+    except Exception:
+        print 'error in getting ' + key
+        sys.exit()
+
+password = get_option('password')
+public_key = get_option('public_key')
+
+# missioncontrol
+f = open('/box/.missioncontrol', 'r')
+missioncontrol = f.read()
+
+for mc in missioncontrol.split('\n'):
+    missioncontrol_host = mc.split(' ')[-1]
+
+    response = ''
+    try:
+        r = req.post('https://' + missioncontrol_host + ':16903/request_internet', {
+            'hostid': hostid,
+            'password': password,
+            'pubkey': public_key,
+        })
+        response = r.text
+        print response
+    except:
+        print 'error contacting missioncontrol'
+
+    if response == 'OK':
+        try:
+            r = req.post('http://127.0.0.1:8000/api/v1/set_option', {
+                'key': 'internet_requested',
+                'value': '1',
+            })
+        except:
+            pass
+
+        break
+

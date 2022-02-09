@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+import requests
+from subprocess import Popen, PIPE
+from sys import exit
+import json
+
+# hostid
+try:
+    resp = requests.post('http://127.0.0.1:8000/api/v1/get_option', {
+        'key': 'hostid',
+    }).text
+    data = json.loads(resp)
+    hostid = data['value']
+    if hostid is None:
+        raise Exception
+
+except Exception:
+    print 'error in getting hostid'
+    exit()
+
+# ssl
+sslcert = '/box/ssl/' + hostid + '-cert.pem'
+sslkey = '/box/ssl/' + hostid + '-private_key.pem'
+sslca = '/box/ssl/ca.pem'
+
+# opkg architecture
+opkg_architecture = Popen(["opkg", "print-architecture"], stdout=PIPE).communicate()[0]
+opkg_architecture = opkg_architecture.split('\n')[-2].split(' ')[1]
+
+# req class
+class req():
+    def get(self, url):
+        return requests.get(url, cert=(sslcert, sslkey), verify=sslca, timeout=10)
+    def post(self, url, data={}):
+        return requests.post(url, data=data, cert=(sslcert, sslkey), verify=sslca, timeout=20)
+req = req()
+
+# missioncontrol
+f = open('/box/.missioncontrol', 'r')
+missioncontrol = f.read()
+
+# append missioncontrol to /etc/hosts
+with open("/etc/hosts", "a") as hosts:
+    hosts.write(missioncontrol)
+
+missioncontrol_hosts = []
+for mc in missioncontrol.split('\n'):
+    missioncontrol_hosts.append({
+        'ip': mc.split(' ')[0],
+        'hostname': mc.split(' ')[-1],
+    })
+
+for mc in missioncontrol_hosts:
+    response = ''
+
+    try:
+        print 'trying ' +  mc['hostname'] + '...'
+        r = req.get('https://' + mc['hostname'] + ':16903/server.json')
+        response = r.text
+
+        # just access some important properties to provoke an exception
+        json_data = json.loads(response)
+        tmp = json_data['hostid']
+        tmp = json_data['peerings_topo128']
+
+        # beyond this point? everything is fine!
+        print 'success!'
+
+        # write server.json
+        print 'writing server.json'
+        with open("/box/server.json", "w") as server_json:
+            server_json.write(response)
+
+        # write opkg.conf
+        opkg_contents = """
+dest root /
+dest ram /tmp
+lists_dir ext /var/opkg-lists
+option overlay_root /overlay
+src/gz base http://""" + mc['ip'] + """/""" + opkg_architecture + """/packages/base
+src/gz enigmabox http://""" + mc['ip'] + """/""" + opkg_architecture + """/packages/enigmabox
+src/gz missioncontrol http://""" + mc['ip'] + """/""" + opkg_architecture + """/packages/missioncontrol
+src/gz oldpackages http://""" + mc['ip'] + """/""" + opkg_architecture + """/packages/oldpackages
+src/gz packages http://""" + mc['ip'] + """/""" + opkg_architecture + """/packages/packages
+src/gz telephony http://""" + mc['ip'] + """/""" + opkg_architecture + """/packages/telephony
+
+"""
+
+        print 'writing opkg.conf'
+        with open("/etc/enigmabox/opkg.conf", "w") as opkg_enigmabox:
+            opkg_enigmabox.write(opkg_contents)
+
+        # write opkg-testing.conf
+        opkg_contents = """
+dest root /
+dest ram /tmp
+lists_dir ext /var/opkg-lists
+option overlay_root /overlay
+src/gz base http://""" + mc['ip'] + """/testing/""" + opkg_architecture + """/packages/base
+src/gz enigmabox http://""" + mc['ip'] + """/testing/""" + opkg_architecture + """/packages/enigmabox
+src/gz missioncontrol http://""" + mc['ip'] + """/testing/""" + opkg_architecture + """/packages/missioncontrol
+src/gz oldpackages http://""" + mc['ip'] + """/testing/""" + opkg_architecture + """/packages/oldpackages
+src/gz packages http://""" + mc['ip'] + """/testing/""" + opkg_architecture + """/packages/packages
+src/gz telephony http://""" + mc['ip'] + """/testing/""" + opkg_architecture + """/packages/telephony
+
+"""
+
+        with open("/etc/enigmabox/opkg-testing.conf", "w") as opkg_enigmabox:
+            opkg_enigmabox.write(opkg_contents)
+
+        print 'done.'
+        break
+
+    except Exception:
+        print 'error contacting missioncontrol (' + mc['hostname'] + ') or invalid json'
+

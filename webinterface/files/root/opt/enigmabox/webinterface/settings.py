@@ -3,7 +3,8 @@ import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = False
+##DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -35,7 +36,8 @@ TIME_ZONE = 'Europe/Zurich'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'de'
+##LANGUAGE_CODE = 'de'
+LANGUAGE_CODE = 'en'
 
 LANGUAGES = (
     ('de', gettext('German')),

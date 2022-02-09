@@ -3,44 +3,39 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-beanstalkc
 PKG_VERSION:=v0.4.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/earl/beanstalkc.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+#PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python python-setuptools
+#PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-beanstalkc-$(PKG_VERSION)
+#PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
+#$(call include_mk, pypi.mk)
+#include $(INCLUDE_DIR)/package.mk
+#$(call include_mk, python-package.mk)
+
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/python-beanstalkc
   SECTION:=language-python
   CATEGORY:=Languages
   SUBMENU:=Python
   TITLE:=Python Beanstalkc
+  DEPENDS:=+python
+  VARIANT:=python
 endef
 
 define Package/python-beanstalkc/description
  A simple beanstalkd client library for Python.
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", \
-		PYTHONPATH="$(PYTHON_LIB_DIR):$(STAGING_DIR_ROOT)/$(PYTHON_PKG_DIR)"; \
-	)
-endef
-
-define Package/python-beanstalkc/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
-endef
-
+$(eval $(call PyPackage,python-beanstalkc))
 $(eval $(call BuildPackage,python-beanstalkc))
+

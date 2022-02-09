@@ -1,0 +1,48 @@
+#!/bin/ash
+
+#set -xv
+
+# variables
+pidfile="/var/run/upgrader.pid"
+firmware_file="/tmp/fw.img.gz"
+pubkey="/etc/enigmabox/rsa-pubkey.pem"
+architecture="$(opkg print-architecture | tail -n 1 | cut -d' ' -f2)"
+
+
+
+# Check if this script is already running
+kill -0 $(cat "$pidfile" 2> /dev/null) 2> /dev/null
+if [[ "$?" == "0" ]]; then
+    echo "Script is already running, exiting"
+    exit 1
+else
+    [[ -f "$pidfile" ]] && rm "$pidfile"
+fi
+echo $$ > "$pidfile"
+
+
+
+# logic
+
+mc_host=$(head -n 1 /box/.missioncontrol | cut -d' ' -f1)   # we only take the first entry
+
+if [[ "$1" == "download" ]]; then
+    curl "http://$mc_host/testing/$architecture/firmware-4G.img.gz" > "$firmware_file"
+    curl "http://$mc_host/testing/$architecture/firmware-4G.img.gz.sig" > "$firmware_file.sig"
+fi
+
+if [[ "$1" == "verify" ]]; then
+    if [[ $(/usr/bin/openssl dgst -sha512 -verify "$pubkey" -signature "$firmware_file.sig" "$firmware_file" | grep 'Verified OK' | wc -l) -gt 0 ]]; then
+        echo 1 > /tmp/fw_sig_ok
+    fi
+fi
+
+if [[ "$1" == "write" ]]; then
+    sleep 5
+    /sbin/sysupgrade -v "$firmware_file"
+fi
+
+
+
+rm "$pidfile"
+

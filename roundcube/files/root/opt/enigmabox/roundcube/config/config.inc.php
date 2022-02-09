@@ -1,50 +1,110 @@
 <?php
 
-/* Local configuration for Roundcube Webmail */
+/*
+ +-----------------------------------------------------------------------+
+ | Local configuration for the Roundcube Webmail installation.           |
+ |                                                                       |
+ | This is a sample configuration file only containing the minimum       |
+ | setup required for a functional installation. Copy more options       |
+ | from defaults.inc.php to this file to override the defaults.          |
+ |                                                                       |
+ | This file is part of the Roundcube Webmail client                     |
+ | Copyright (C) The Roundcube Dev Team                                  |
+ |                                                                       |
+ | Licensed under the GNU General Public License version 3 or            |
+ | any later version with exceptions for skins & plugins.                |
+ | See the README file for a full license statement.                     |
+ +-----------------------------------------------------------------------+
+*/
 
+$config = array();
+
+// Database connection string (DSN) for read+write operations
+// Format (compatible with PEAR MDB2): db_provider://user:password@host/database
+// Currently supported db_providers: mysql, pgsql, sqlite, mssql, sqlsrv, oracle
+// For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
+// NOTE: for SQLite use absolute path (Linux): 'sqlite:////full/path/to/sqlite.db?mode=0646'
+//       or (Windows): 'sqlite:///C:/full/path/to/sqlite.db'
+//$config['db_dsnw'] = 'mysql://roundcube:pass@localhost/roundcubemail';
 $config['db_dsnw'] = 'sqlite:////box/roundcube.sqlite?mode=0646';
 
+// The IMAP host chosen to perform the log-in.
+// Leave blank to show a textbox at login, give a list of hosts
+// to display a pulldown menu or set one host as string.
+// Enter hostname with prefix ssl:// to use Implicit TLS, or use
+// prefix tls:// to use STARTTLS.
+// Supported replacement variables:
+// %n - hostname ($_SERVER['SERVER_NAME'])
+// %t - hostname without the first part
+// %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
+// %s - domain name after the '@' from e-mail address provided at login screen
+// For example %n = mail.domain.tld, %t = domain.tld
+//$config['default_host'] = 'localhost';
 $config['default_host'] = 'box';
 
+// SMTP server host (for sending mails).
+// Enter hostname with prefix ssl:// to use Implicit TLS, or use
+// prefix tls:// to use STARTTLS.
+// Supported replacement variables:
+// %h - user's IMAP hostname
+// %n - hostname ($_SERVER['SERVER_NAME'])
+// %t - hostname without the first part
+// %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
+// %z - IMAP domain (IMAP hostname without the first part)
+// For example %n = mail.domain.tld, %t = domain.tld
+//$config['smtp_server'] = 'localhost';
 $config['smtp_server'] = 'box';
 
+// SMTP port. Use 25 for cleartext, 465 for Implicit TLS, or 587 for STARTTLS (default)
+//$config['smtp_port'] = 587;
+$config['smtp_port'] = 25;
+
+// SMTP username (if required) if you use %u as the username Roundcube
+// will use the current username for login
+//$config['smtp_user'] = '%u';
+$config['smtp_user'] = '';
+
+// SMTP password (if required) if you use %p as the password Roundcube
+// will use the current user's password for login
+//$config['smtp_pass'] = '%p';
+$config['smtp_pass'] = '';
+
+// provide an URL where a user can get support for this Roundcube installation
+// PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
+//$config['support_url'] = '';
 $config['support_url'] = 'http://enigmabox.net/kontakt/';
 
-$config['log_dir'] = 'logs/';
+// Name your service. This is displayed on the login screen and in the window title
+//$config['product_name'] = 'Roundcube Webmail';
+$config['product_name'] = 'Enigmabox Webmail';
 
-$config['temp_dir'] = 'temp/';
-
+// This key is used to encrypt the users imap password which is stored
+// in the session record. For the default cipher method it must be
+// exactly 24 characters long.
+// YOUR KEY MUST BE DIFFERENT THAN THE SAMPLE VALUE FOR SECURITY REASONS
+//$config['des_key'] = 'rcmail-!24ByteDESkey*Str';
 $config['des_key'] = 'AkTFeF3AT5etSZ6YB6+3h0jv';
+
+// List of active plugins (in plugins/ directory)
+$config['plugins'] = array(
+    'archive',
+    'zipdownload',
+    'enigmabox_additions',
+);
+//$config['plugins'] = array('enigmabox_additions');
+
+// skin name: folder from skins/
+$config['skin'] = 'elastic';
 
 $config['username_domain'] = 'box';
 
-$config['password_charset'] = 'UTF-8';
-
-$config['product_name'] = 'Enigmabox Webmail';
 
 $config['identities_level'] = 3;
 
-$config['plugins'] = array('enigmabox_additions');
 
-$config['message_sort_col'] = 'arrival';
+//$config['enable_installer'] = true; 
 
-$config['list_cols'] = array('flag', 'attachment', 'fromto', 'subject', 'date', 'size');
+//$config['smtp_debug'] = true; 
 
-$config['language'] = 'de_CH';
 
-$config['enable_spellcheck'] = false;
-
-$config['skin'] = 'high_security';
-
-$config['timezone'] = 'UTC';
-
-$config['draft_autosave'] = 180;
-
-$config['preview_pane'] = true;
-
-$config['inline_images'] = false;
-
-$config['mime_param_folding'] = 0;
-
-$config['message_cache_lifetime'] = '10d';
 

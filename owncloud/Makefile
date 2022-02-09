@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=owncloud
-PKG_VERSION:=8.1.0
+PKG_VERSION:=10.7.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.owncloud.org/community/
-PKG_MD5SUM:=164f4517e1cccca72aeb5616cb28c3e7
+PKG_MD5SUM:=29a8d79acc9271b8bfde5ab35e2ab6a5
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 CC="$(TARGET_CC)"
 

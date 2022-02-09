@@ -1,0 +1,12 @@
+--- a/OS/Makefile-Linux	2021-05-19 14:44:19.124300101 +0200
++++ b/OS/Makefile-Linux	2021-05-19 14:44:39.259228943 +0200
+@@ -19,7 +19,7 @@
+ DBMLIB = -ldb
+ USE_DB = yes
+ 
+-LIBS = -lnsl -lcrypt -lm
++LIBS = -lcrypt -lm
+ LIBRESOLV = -lresolv
+ 
+ X11=/usr/X11R6
+

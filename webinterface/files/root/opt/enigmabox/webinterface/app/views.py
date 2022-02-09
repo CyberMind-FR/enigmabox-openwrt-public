@@ -85,6 +85,12 @@ def home(request):
     except Exception:
         network_profile = 'apu'
 
+    if network_profile == 'ebin':
+        iface_map = {
+            "wan": "internet",
+            "lan0": "lan1",
+            "lan1": "lan2",
+        }
     if network_profile == 'alix':
         iface_map = {
             "eth0": "internet",
@@ -1023,6 +1029,8 @@ def portforwarding_edit(request, port=None):
     except Exception:
         network_profile = 'apu'
 
+    if network_profile == 'ebin':
+        internet_interface = 'wan'
     if network_profile == 'alix':
         internet_interface = 'eth0'
     if network_profile == 'apu':
@@ -1651,6 +1659,7 @@ def cfengine_site(request):
     peerings = []
     display_expiration_notice = '0'
     is_alix = False
+    is_ebin = False
     is_apu = False
     is_raspi = False
 
@@ -1760,6 +1769,8 @@ def cfengine_site(request):
             network_profile = f.read().strip()
             if network_profile == 'alix':
                 is_alix = True
+            if network_profile == 'ebin':
+                is_ebin = True
             if network_profile == 'apu':
                 is_apu = True
             if network_profile == 'raspi':
@@ -1874,6 +1885,18 @@ def cfengine_site(request):
             with open('/etc/enigmabox/network-profile', 'r') as f:
                 network_profile = f.read().strip()
 
+            if network_profile == 'ebin':
+                autopeering = [
+                    {
+                        'interface': 'lan0',
+                    },
+                    {
+                        'interface': 'lan1',
+                    },
+                    {
+                        'interface': 'wan',
+                    },
+                ]
             if network_profile == 'alix':
                 autopeering = [
                     {
@@ -1992,6 +2015,7 @@ def cfengine_site(request):
         'wlan_ssid': o.get_value('wlan_ssid'),
         'wlan_opmode': wlan_opmode,
         'meshmode': meshmode,
+        'is_ebin': is_ebin,
         'is_alix': is_alix,
         'is_apu': is_apu,
         'is_raspi': is_raspi,

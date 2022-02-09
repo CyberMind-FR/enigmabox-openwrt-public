@@ -2,23 +2,23 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/acl/localization/<lang>.inc                                   |
- |                                                                       |
  | Localization file of the Roundcube Webmail ACL plugin                 |
- | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
+ |                                                                       |
+ | Copyright (C) The Roundcube Dev Team                                  |
  |                                                                       |
  | Licensed under the GNU General Public License version 3 or            |
  | any later version with exceptions for skins & plugins.                |
  | See the README file for a full license statement.                     |
- |                                                                       |
  +-----------------------------------------------------------------------+
 
  For translation see https://www.transifex.com/projects/p/roundcube-webmail/resource/plugin-acl/
 */
+
 $labels['sharing'] = 'Κοινή χρήση';
 $labels['myrights'] = 'Δικαιώματα Πρόσβασης ';
 $labels['username'] = 'Χρήστης:';
 $labels['advanced'] = 'Προηγμένη λειτουργία';
+$labels['add'] = 'Προσθήκη';
 $labels['newuser'] = 'Προσθήκη καταχώρησης ';
 $labels['editperms'] = 'Μεταβολή δικαιωμάτων';
 $labels['actions'] = 'Ενέργειες δικαιωμάτων πρόσβασης...';
@@ -80,6 +80,10 @@ $labels['longaclfull'] = 'Πλήρης έλεγχος συμπεριλαμβαν
 $labels['longaclread'] = 'Ο φάκελος είναι δυνατό να προσπελαστεί για ανάγνωση';
 $labels['longaclwrite'] = 'Τα μηνύματα μπορούν να σημαδεύονται, να εγγράφονται ή να αντιγράφονται στον φάκελο';
 $labels['longacldelete'] = 'Τα μηνύματα μπορούν να διαγραφούν';
+$labels['longaclother'] = 'Άλλα δικαιώματα πρόσβασης';
+$labels['ariasummaryacltable'] = 'Λίστα δικαιωμάτων πρόσβασης';
+$labels['arialabelaclactions'] = 'Λίστα ενεργειών';
+$labels['arialabelaclform'] = 'Φόρμα δικαιωμάτων πρόσβασης';
 $messages['deleting'] = 'Διαγραφή των δικαιωμάτων πρόσβασης...';
 $messages['saving'] = 'Αποθήκευση δικαιώματων πρόσβασης...';
 $messages['updatesuccess'] = 'Επιτυχής μεταβολή των δικαιωμάτων πρόσβασης';

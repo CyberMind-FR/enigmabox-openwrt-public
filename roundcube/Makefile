@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=roundcube
 PKG_VERSION:=1.0.1
-PKG_RELEASE:=9
+PKG_RELEASE:=10
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -32,6 +32,7 @@ define Package/roundcube/install
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/sites.d
 	$(INSTALL_DATA) ./files/lighttpd-site.conf $(1)/etc/lighttpd/sites.d/roundcube.conf
+	$(INSTALL_DATA) ./files/mime.types $(1)/etc/mime.types
 endef
 
 $(eval $(call BuildPackage,roundcube))

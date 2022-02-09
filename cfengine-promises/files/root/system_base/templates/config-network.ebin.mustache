@@ -1,0 +1,36 @@
+
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config interface 'lan1'
+	option ifname 'lan1'
+	option proto 'static'
+	option ipaddr '192.168.{{ lan_range_second }}.1'
+	option netmask '255.255.255.0'
+	option ip6addr 'fdfb::1/64'
+
+config interface 'lan0'
+	option ifname 'lan0'
+	option proto 'static'
+	option ipaddr '192.168.{{ lan_range_first }}.1'
+	option netmask '255.255.255.0'
+	option ip6addr 'fdfa::1/64'
+
+config interface 'wan'
+	option ifname 'wan'
+	option proto 'dhcp'
+
+config interface 'wan6'
+	option ifname 'wan'
+	option proto 'dhcpv6'
+	option reqaddress 'try'
+	option peerdns '0'
+	option reqprefix 'auto'
+	list dns '::1'
+
+config globals 'globals'
+	option ula_prefix 'fd9a:6a77:bce8::/48'
+

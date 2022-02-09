@@ -13,5 +13,8 @@ choice
     config NETWORK_PROFILE_RASPI
         bool "Rasperry Pi"
 
+    config NETWORK_PROFILE_EBIN
+        bool "EspressoBin"
+
 endchoice
 
